@@ -48,4 +48,15 @@ public class PessoaResource {
         return pessoa.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @DeleteMapping("/{codigo}")
+    public ResponseEntity<Void> deletar(@PathVariable Long codigo) {
+        if (!pessoaRepository.existsById(codigo)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        pessoaRepository.deleteById(codigo);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
 }
