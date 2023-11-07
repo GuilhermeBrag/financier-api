@@ -3,6 +3,7 @@ package com.example.financierapi.resource;
 import com.example.financierapi.event.RecursoCriadoEvent;
 import com.example.financierapi.model.Pessoa;
 import com.example.financierapi.repository.PessoaRepository;
+import com.example.financierapi.service.PessoaService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,8 @@ public class PessoaResource {
 
     @Autowired
     private PessoaRepository pessoaRepository;
-
+    @Autowired
+    private PessoaService pessoaService;
     @Autowired
     private ApplicationEventPublisher publisher;
 
@@ -57,6 +59,13 @@ public class PessoaResource {
         pessoaRepository.deleteById(codigo);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PutMapping("/{codigo}")
+    public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo, @Valid @RequestBody Pessoa pessoa) {
+        Pessoa pessoaSalva = pessoaService.atualizar(codigo, pessoa);
+        return ResponseEntity.ok(pessoaSalva);
+    }
+
 
 
 }
