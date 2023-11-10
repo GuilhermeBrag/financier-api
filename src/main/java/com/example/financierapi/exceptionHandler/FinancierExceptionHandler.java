@@ -7,6 +7,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -70,6 +71,16 @@ public class FinancierExceptionHandler extends ResponseEntityExceptionHandler {
         List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario,mensagemDesenvolvedor));
 
         return handleExceptionInternal(ex,erros , new HttpHeaders(), HttpStatus.BAD_REQUEST,request);
+    }
+
+    @ExceptionHandler({InvalidDataAccessApiUsageException.class})
+    public ResponseEntity<Object> handleInvalidDataAccessApiUsageException (InvalidDataAccessApiUsageException ex, WebRequest request) {
+        String mensagemUsuario = messageSource.getMessage("mensagem.invalida",null, LocaleContextHolder.getLocale());
+        String mensagemDesenvolvedor = ex.getCause() != null ? ex.getCause().toString() : ex.toString();
+
+        List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario,mensagemDesenvolvedor));
+
+        return handleExceptionInternal(ex,erros ,new HttpHeaders(), HttpStatus.BAD_REQUEST,request);
     }
 
 

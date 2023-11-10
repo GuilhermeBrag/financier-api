@@ -1,5 +1,6 @@
 package com.example.financierapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -29,5 +30,10 @@ public class Pessoa {
     private Boolean ativo;
 
 
+    @JsonIgnore
+    @Transient
+    public boolean isInativo() {
+        return !this.ativo;
+    }
 
 }
