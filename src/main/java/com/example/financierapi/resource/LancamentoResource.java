@@ -4,6 +4,7 @@ import com.example.financierapi.event.RecursoCriadoEvent;
 import com.example.financierapi.exceptionHandler.FinancierExceptionHandler;
 import com.example.financierapi.model.Lancamento;
 import com.example.financierapi.repository.LancamentoRepository;
+import com.example.financierapi.repository.filter.LancamentoFilter;
 import com.example.financierapi.service.LancamentoService;
 import com.example.financierapi.service.exception.PessoaInativaException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,8 +37,8 @@ public class LancamentoResource {
     private ApplicationEventPublisher publisher;
 
     @GetMapping
-    public List<Lancamento> listar() {
-        return this.lancamentoRepository.findAll();
+    public List<Lancamento> pesquisar(LancamentoFilter lancamentoFilter) {
+        return this.lancamentoRepository.filtrar(lancamentoFilter);
     }
     @GetMapping("/{codigo}")
     public ResponseEntity<Lancamento> buscarPeloCodigo (@PathVariable Long codigo) {
