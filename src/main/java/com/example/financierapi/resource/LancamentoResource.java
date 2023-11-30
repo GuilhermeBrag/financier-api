@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,9 +39,10 @@ public class LancamentoResource {
     private ApplicationEventPublisher publisher;
 
     @GetMapping
-    public List<Lancamento> pesquisar(LancamentoFilter lancamentoFilter) {
-        return this.lancamentoRepository.filtrar(lancamentoFilter);
+    public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable) {
+        return this.lancamentoRepository.filtrar(lancamentoFilter, pageable);
     }
+
     @GetMapping("/{codigo}")
     public ResponseEntity<Lancamento> buscarPeloCodigo (@PathVariable Long codigo) {
         Optional<Lancamento> lancamento = this.lancamentoRepository.findById(codigo);
@@ -65,4 +68,17 @@ public class LancamentoResource {
 
         return ResponseEntity.badRequest().body(erros);
     }
+
+    @DeleteMapping("/{codigo}")
+    public ResponseEntity<Void> deletar(@PathVariable Long codigo) {
+        if (!lancamentoRepository.existsById(codigo)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        lancamentoRepository.deleteById(codigo);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
+
 }
